@@ -13,9 +13,6 @@
             "user": "string",
             "group": "string"
         },
-        "disconnect"{
-        
-        },
         "exit_to_menu": {
             "user": "string",
             "group": "string",
@@ -262,16 +259,20 @@
                 "description":"The player's session ID number for this play session"
             },
             "FunnelByUser": {
-                "enabled": false,
+                "enabled": true,
                 "description":"Funnel of puzzles for this play session"
             },
             "LevelsOfDifficulty": {
-                "enabled": true,
+                "enabled": false,
                 "description":"Set of features for each level describing the difficulty of a puzzle (on-going-work)"
             },
             "SequenceBetweenPuzzles": {
                 "enabled": false,
                 "description":"Sequence of puzzles and its funnel stage reached of a given session"
+            },
+            "SequenceWithinPuzzles": {
+                "enabled": false,
+                "description":"Sequence of puzzles within each attempt in each level that the user has played"
             }
         }
     },

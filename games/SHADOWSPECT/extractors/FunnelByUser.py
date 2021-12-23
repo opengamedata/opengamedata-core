@@ -38,16 +38,18 @@ class FunnelByUser(SessionFeature):
 
             if self._level not in self._userFunnelDict.keys():
                 self._userFunnelDict[self._level] = json.loads('{"started": 0, "create_shape": 0, "submitted": 0, "completed": 0}')
+                
+        if self._level != None:
 
-        if event.event_name == "puzzle_started":
-            self._userFunnelDict[self._level]["started"] = 1
+            if event.event_name == "puzzle_started":
+                self._userFunnelDict[self._level]["started"] = 1
 
-        elif event.event_name == "create_shape":
-            self._userFunnelDict[self._level]["create_shape"] = 1
+            elif event.event_name == "create_shape":
+                self._userFunnelDict[self._level]["create_shape"] = 1
 
-        elif event.event_name == "check_solution":
-            self._userFunnelDict[self._level]["submitted"] = 1
+            elif event.event_name == "check_solution":
+                self._userFunnelDict[self._level]["submitted"] = 1
 
-        elif event.event_name == "puzzle_complete":
-            self._userFunnelDict[self._level]["completed"] = 1
+            elif event.event_name == "puzzle_complete":
+                self._userFunnelDict[self._level]["completed"] = 1
 

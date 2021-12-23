@@ -3,7 +3,8 @@ __all__ = [
     "SessionID",
     "FunnelByUser",
     "LevelsOfDifficulty",
-    "SequenceBetweenPuzzles"
+    "SequenceBetweenPuzzles",
+    "SequenceWithinPuzzles"
 ]
 
 from . import MoveShapeCount
@@ -11,3 +12,4 @@ from . import SessionID
 from . import FunnelByUser
 from . import LevelsOfDifficulty
 from . import SequenceBetweenPuzzles
+from . import SequenceWithinPuzzles

@@ -66,8 +66,8 @@ class SequenceBetweenPuzzles(SessionFeature):
 
             elif event.event_name == "puzzle_complete":
                 self._currentPuzzle["funnel"] = "completed"
-                
-            elif event.event_name in ["disconnect", "login_user", "exit_to_menu"]:
+
+            elif event.event_name in ["disconnect", "login_user", "exit_to_menu"] and self._activePuzzle != None:
                 #Add current data
                 self._userPuzzleDict[self._activePuzzle].append(json.dumps(self._currentPuzzle))
                 self._currentPuzzle = {}

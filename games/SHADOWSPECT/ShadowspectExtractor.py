@@ -35,6 +35,8 @@ class ShadowspectExtractor(Extractor):
             ret_val = LevelsOfDifficulty.LevelsOfDifficulty(name=name, description=feature_args["description"])
         elif feature_type == "SequenceBetweenPuzzles":
             ret_val = SequenceBetweenPuzzles.SequenceBetweenPuzzles(name=name, description=feature_args["description"])
+        elif feature_type == "SequenceWithinPuzzles":
+            ret_val = SequenceWithinPuzzles.SequenceWithinPuzzles(name=name, description=feature_args["description"])
         else:
             raise NotImplementedError(f"'{feature_type}' is not a valid feature for Shadowspect.")
         return ret_val
