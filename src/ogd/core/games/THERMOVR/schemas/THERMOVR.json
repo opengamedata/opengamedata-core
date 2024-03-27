@@ -1,0 +1,629 @@
+{
+    "game_state" : {
+        "seconds_from_launch" : {
+            "type" : "float",
+            "description" : "The number of seconds of game time elapsed since the game was launched, *not including time when the game was paused*."
+        },
+        "region" : {
+            "type" : "enum(WATER, VAPOR, TWO_PHASE)",
+            "description" : "The current graph region of the water in the piston"
+        },
+        "pressure" : {
+            "type" : "float",
+            "description" : "The current pressure (P) in the piston in kPa"
+        },
+        "temperature" : {
+            "type" : "float",
+            "description" : "The current temperature (T) of the water in the piston in K"
+        },
+        "volume" : {
+            "type" : "float",
+            "description" : "The current volume (V) of the water in the piston m^3"
+        },
+        "internal_energy" : {
+            "type" : "float",
+            "description" : "The current internal energy (u) in the piston"
+        },
+        "entropy" : {
+            "type" : "float",
+            "description" : "The current entropy (s) in the piston in kJ/(kgK)"
+        },
+        "enthalpy" : {
+            "type" : "float",
+            "description" : "The current enthalpy (h) in the piston in kJ/kg"
+        },
+        "vapor" : {
+            "type" : "float",
+            "description" : "The current percentage (by mass) of water in the vapor phase in the piston"
+        },
+        "pos_x" : {
+            "type" : "float",
+            "description" : "The current x-position of the headset at the moment the event occurred."
+        },
+        "pos_y" : {
+            "type" : "float",
+            "description" : "The current y-position of the headset at the moment the event occurred."
+        },
+        "pos_z" : {
+            "type" : "float",
+            "description" : "The current z-position of the headset at the moment the event occurred."
+        },
+        "rot_x" : {
+            "type" : "float",
+            "description" : "The x-component of the orientation of the headset at the moment the event occurred."
+        },
+        "rot_y" : {
+            "type" : "float",
+            "description" : "The y-component of the orientation of the headset at the moment the event occurred."
+        },
+        "rot_z" : {
+            "type" : "float",
+            "description" : "The z-component of the orientation of the headset at the moment the event occurred."
+        },
+        "rot_w" : {
+            "type" : "float",
+            "description" : "The w-component of the orientation of the headset at the moment the event occurred."
+        },
+        "insulation_tool" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the insulation tool: whether it is enabled, and the percent effectiveness of the insulation."
+        },
+        "lower_stop_tool" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the lower stop tool: whether it is enabled, and the minimum piston volume in m^3/kg."
+        },
+        "upper_stop_tool" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the upper stop tool: whether it is enabled, and the maximum piston volume in m^3/kg."
+        },
+        "increase_weight_tool" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the weight (pressure increase) tool: whether it is enabled, and the pressure increase in kPa."
+        },
+        "decrease_weight_tool" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the balloon (pressure reduction) tool: whether it is enabled, and the pressure reduction in kPa."
+        },
+        "heat_tool" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the bunsen burner tool: whether it is enabled, and the heat per second it generates in kJ/s."
+        },
+        "cooling_tool" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the cooling coil tool: whether it is enabled, and the heat per second it removes in kJ/s."
+        },
+        "chamber_temperature_tool" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the chamber/ambient temperature tool: whether ambient heat exchange is enabled, and the ambient temperature in K."
+        },
+        "chamber_pressure_tool" : {
+            "type": "Dict[str, int]",
+            "details": {
+                "enabled":"bool",
+                "slider_val":"float"
+            },
+            "description": "The state of the chamber/ambient pressure tool: the ambient pressure in kPa (the ambient pressure is always enabled)."
+        },
+        "current_lab" : {
+            "type": "Dict[str, int] | null",
+            "details": {
+                "lab_name":"str",
+                "author":"str",
+                "percent_complete":"float"
+            },
+            "description": "A description of the currently-active lab, or null if not in lab mode."
+        },
+        "current_section" : {
+            "type": "Dict[str, int] | null",
+            "details": {
+                "section_number":"int",
+                "description":"str",
+                "is_complete":"bool"
+            },
+            "description": "A description of the currently-active lab section, or null if not in lab mode."
+        },
+        "current_task" : {
+            "type": "Dict[str, int] | null",
+            "details": {
+                "category":"enum(TARGET_STATE, CONSTANT_VARIABLE, MULTIPLE_CHOICE, MULTIPLE_SELECT, WORD_BANK)",
+                "task_number":"int",
+                "prompts":"List[str]",
+                "available_tools":"List[enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)]",
+                "is_complete":"bool"
+            },
+            "description": "A description of the currently-active lab task, or null if not in lab mode."
+        }
+    },
+
+    "events": {
+        "game_start": {
+            "description": "When a new game is started",
+            "event_data": {
+                "mode": {
+                    "type": "enum(VR, WEB)",
+                    "description": "The mode of the game being started, either on a VR headset or the web-based version."
+                }
+            }
+        },
+        "click_new_game": {
+            "description": "When the player clicks the button for a new game. This should trigger a new `game_start` event, with new session and player IDs",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_reset_sim": {
+            "description": "When the player clicks the button to reset the sim to its default state. The default state may be redefined by certain tasks in lab mode.",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                },
+                "default_state" : {
+                    "type": "Dict[str, float]",
+                    "details": {
+                        "region" : "enum(WATER, VAPOR, TWO_PHASE)",
+                        "pressure" : "float",
+                        "temperature" : "float",
+                        "volume" : "float",
+                        "internal_energy" : "float",
+                        "entropy" : "float",
+                        "enthalpy" : "float",
+                        "vapor" : "float"
+                    },
+                    "description": "A mapping of simulation state variable names to their default values."
+                }
+            }
+        },
+        "headset_on": {
+            "description": "When the player puts the headset on, resuming the game",
+            "event_data": {}
+        },
+        "headset_off": {
+            "description": "When the player removes the headset from their head, pausing the game",
+            "event_data": {}
+        },
+        "viewport_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player headset for each frame in the past second",
+            "event_data": {
+                "gaze_data_package" : {
+                    "type" : "List[Dict]",
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description" : "A list of dicts, where each dict is one frame of headset data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "left_hand_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player's left hand for each frame in the past second",
+            "event_data": {
+                "left_hand_data_package": {
+                    "type": "List[Dict]",
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of left-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "right_hand_data": {
+            "description": "An event sent approximately once per second, containing the in-game position and orientation of the player's right hand for each frame in the past second",
+            "event_data": {
+                "right_hand_data_package": {
+                    "type": "List[Dict]",
+                    "details" : {
+                        "pos" : "List[float]",
+                        "rot" : "List[float]"
+                    },
+                    "description": "A list of dicts, where each dict is one frame of right-hand data, containing a position and rotation vector, e.g. {\"pos\":[1,2,3], \"rot\":[4,5,6,7]}."
+                }
+            }
+        },
+        "grab_tablet": {
+            "description": "When the player grabs the tablet object",
+            "event_data": {
+                "start_position": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "pos_x" : "float",
+                        "pos_y" : "float",
+                        "pos_z" : "float"
+                    },
+                    "description": "The position of the tablet when the player grabbed it"
+                },
+                "start_rotation": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "rot_x" : "float",
+                        "rot_y" : "float",
+                        "rot_z" : "float",
+                        "rot_w" : "float"
+                    },
+                    "description": "The orientation of the tablet when the player grabbed it"
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player grabbed the tablet with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "release_tablet": {
+            "description": "When the player releases the tablet object",
+            "event_data": {
+                "end_position": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "pos_x" : "float",
+                        "pos_y" : "float",
+                        "pos_z" : "float"
+                    },
+                    "description": "The position of the tablet when the player released it"
+                },
+                "end_rotation": {
+                    "type": "Dict[str, float]",
+                    "details" : {
+                        "rot_x" : "float",
+                        "rot_y" : "float",
+                        "rot_z" : "float",
+                        "rot_w" : "float"
+                    },
+                    "description": "The orientation of the tablet when the player released it"
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player was moving the tablet with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "grab_workstation_handle": {
+            "description": "When the player grabs the workstation adjustment handle",
+            "event_data": {
+                "start_height": {
+                    "type": "float",
+                    "description": "The height of the workstation handle when the player grabbed it."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player grabbed the handle with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "release_workstation_handle": {
+            "description": "When the player releases the tablet object",
+            "event_data": {
+                "end_height": {
+                    "type": "float",
+                    "description": "The height of the workstation handle when the player released it."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player moved the handle with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_rotate_graph_cw": {
+            "description": "When the player clicks the button to rotate the phase graph clockwise",
+            "event_data": {
+                "start_degrees": {
+                    "type": "float",
+                    "description": "The rotation of the graph prior to the button press, in degrees, relative to the default graph rotation."
+                },
+                "end_degrees": {
+                    "type": "float",
+                    "description": "The rotation of the graph as a result of the button press, in degrees, relative to the default graph rotation."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player grabbed the handle with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_rotate_graph_ccw": {
+            "description": "When the player clicks the button to rotate the phase graph counter-clockwise",
+            "event_data": {
+                "start_degrees": {
+                    "type": "float",
+                    "description": "The rotation of the graph prior to the button press, in degrees, relative to the default graph rotation."
+                },
+                "end_degrees": {
+                    "type": "float",
+                    "description": "The rotation of the graph as a result of the button press, in degrees, relative to the default graph rotation."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player moved the handle with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "grab_graph_ball": {
+            "description": "When the player grabs the phase graph's state 'ball' and begins to drag it around",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player grabbed the ball with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "release_graph_ball": {
+            "description": "When the player releases the phase graph's state 'ball' at a new position on the graph.",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player moved the ball with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_tool_toggle": {
+            "description": "When the player clicks the button to enable/disable a tool",
+            "event_data": {
+                "tool_name": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The tool whose toggle button was clicked."
+                },
+                "tool_enabled": {
+                    "type": "bool",
+                    "description": "True if clicking the button enabled the tool, or false if it disabled the tool."
+                },
+                "tool_reset": {
+                    "type": "bool",
+                    "description": "True if clicking the button reset the tool to its default value (0 for most tools)."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_tool_increase": {
+            "description": "When the player clicks the button to nudge the tool value up",
+            "event_data": {
+                "tool_name": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The tool whose increase button was clicked."
+                },
+                "end_value": {
+                    "type": "float",
+                    "description": "The tool value after being nudged."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_tool_decrease": {
+            "description": "When the player clicks the button to nudge the tool value down",
+            "event_data": {
+                "tool_name": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The tool whose decrease button was clicked."
+                },
+                "end_value": {
+                    "type": "float",
+                    "description": "The tool value after being nudged."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "grab_tool_slider": {
+            "description": "When the player grabs the tool slider to adjust the value",
+            "event_data": {
+                "tool_name": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The tool whose decrease button was clicked."
+                },
+                "start_value": {
+                    "type": "float",
+                    "description": "The tool value when the player grabbed the slider, in the tool's units."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "release_tool_slider": {
+            "description": "When the player releases the tool slider after adjusting the value",
+            "event_data": {
+                "tool_name": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The tool whose decrease button was clicked."
+                },
+                "end_value": {
+                    "type": "float",
+                    "description": "The tool value after the slider was released, in the tool's units."
+                },
+                "auto_release" : {
+                    "type" : "bool",
+                    "description" : "Indicator for whether the release of the slider was automatically enforced by the system. This could be either because the player's hand got too far from the slider, or because the player pressed another button, such as reset, while dragging the slider."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "gaze_object_end": {
+            "description": "When the player has been looking at one of the major objects for at least a full second, and looks away.",
+            "event_data": {
+                "object": {
+                    "type": "enum(TABLET, PISTON, GRAPH, CONTROLS)",
+                    "description": "Which object the player gazed at."
+                },
+                "gaze_duration": {
+                    "type": "float",
+                    "description": "The time in seconds the player spent looking at the object."
+                }
+            }
+        },
+        "click_view_settings": {
+            "description": "When the player presses the tablet button to view settings panel",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_toggle_setting": {
+            "description": "When the player ticks/unticks a setting in the settings panel",
+            "event_data": {
+                "setting": {
+                    "type": "enum(AXIS_NUMBERS, GRID_LINES, REGION_LABELS, AXIS_TRACKERS)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                },
+                "enabled" : {
+                    "type" : "bool",
+                    "description" : "True if the click enabled the given setting, or false if it disabled the setting."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "tool_locked": {
+            "description": "When a lab task locks a specific tool, making it unvailable to the player",
+            "event_data": {
+                "hand": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The specific tool that was locked."
+                }
+            }
+        },
+        "tool_unlocked": {
+            "description": "When a lab task unlocks a specific tool, making it ailable to the player. Also occurs when returning to Sandbox mode.",
+            "event_data": {
+                "hand": {
+                    "type": "enum(INSULATION, LOWER_STOP, UPPER_STOP, INCREASE_WEIGHT, DECREASE_WEIGHT, HEAT, COOLING, CHAMBER_TEMPERATURE, CHAMBER_PRESSURE)",
+                    "description": "The specific tool that was unlocked."
+                }
+            }
+        },
+        "click_sandbox_mode": {
+            "description": "When the player presses the tablet button to enter sandbox mode",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_lab_mode": {
+            "description": "When the player presses the tablet button to enter lab mode",
+            "event_data": {
+                "initial_lab" : {
+                    "type": "Dict[str, int] | null",
+                    "details": {
+                        "lab_name":"str",
+                        "author":"str",
+                        "percent_complete":"float",
+                        "sections": "Dict[str, Any]"
+                    },
+                    "description": "A description of the lab that was started/resumed upon entering lab mode, or null if no lab was start and the player was shown the lab menu instead."
+                },
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_lab_scroll_up": {
+            "description": "When the player presses the button to scroll up in the list of available labs in the lab menu",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "click_lab_scroll_down": {
+            "description": "When the player presses the button to scroll down in the list of available labs in the lab menu",
+            "event_data": {
+                "hand": {
+                    "type": "enum(LEFT, RIGHT, MOUSE)",
+                    "description": "Indicator of whether the player pressed the button with their right or left hand, or a mouse."
+                }
+            }
+        },
+        "lab_menu_displayed": {
+            "description": "When the tablet displays a list of available labs to the player",
+            "event_data": {
+                "available_labs" : {
+                    "type": "List[Dict]",
+                    "details": {
+                        "lab_name":"str",
+                        "author":"str",
+                        "percent_complete":"float"
+                    },
+                    "description": "A list of the labs displayed to the player (not including any labs that are available but undisplayed)."
+                }
+            }
+        },
+        "select_lab": {
+            "description": "When the player selects a lab from the menu",
+            "event_data": {
+                "initial_lab" : {
+                    "type": "List[Dict]",
+                    "details": {
+                        "lab_name":"str",
+                        "author":"str",
+                        "percent_complete":"float"
+                    },
+                    "description": "A list of the labs displayed to the player (not including any labs that are available but undisplayed)."
+                }
+            }
+        },
+    },
+
+    "features": {
+        "per_count": {
+        },
+        "aggregate":{
+        }
+    },
+
+    "config": {
+    	"SUPPORTED_VERS": [1]
+	}
+}

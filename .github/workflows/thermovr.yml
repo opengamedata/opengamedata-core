@@ -1,0 +1,49 @@
+# Workflow to test-run data when we modify PenguinExtractor.
+name: ThermoVR Exporter CI Test
+on:
+  push:
+    paths:
+    - 'src/ogd/core/games/THERMOVR/**'
+    - '.github/workflows/thermovr.yml'
+  workflow_dispatch: # Allow manual trigger of this workflow from the Actions tab
+jobs:
+  ThermoVR_CI:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    # - name: Get OpenConnect
+    #   run: sudo apt-get -q update && sudo apt-get -q install openconnect
+    - name: Get Dependencies
+      uses: ./.github/actions/OGD_dependencies
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0
+      with:
+        project_id: ${{ secrets.OGD_BQ_PROJECT_ID }}
+        service_account_key: ${{ secrets.OGD_SELECTOR_BQ_KEY }}
+        export_default_credentials: true
+    - name: Set up Config File
+      uses: ./.github/actions/OGD_config
+      with:
+        vpn_user: ${{secrets.VPN_USER}}
+        vpn_pass: ${{secrets.VPN_PASS}}
+        sql_host: ${{vars.FD_LOGGER_HOST}}
+        sql_user: ${{secrets.SQL_USER}}
+        sql_pass: ${{secrets.SQL_PASS}}
+        # TODO: set log_level to DEBUG once we've made sure there aren't excess outputs from the extractor itself.
+        log_level: "INFO"
+    - name: Set up Schema File
+      uses: ./.github/actions/OGD_schema
+      with:
+        game: "THERMOVR"
+    - name: Do Export of last week's data
+      uses: ./.github/actions/export_last_week
+      with:
+        game: THERMOVR
+    - name: Upload logs as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./*.log
+    - name: Upload zips as artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./data/THERMOVR/*.zip

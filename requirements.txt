@@ -1,10 +1,11 @@
 build>=0.10.*
 gitdb>=4.0.*
 GitPython>=3.1.*
-google-cloud-bigquery==3.4.0
+google-cloud-bigquery==3.19.0
 mysql-connector-python==8.0.25
 numpy>=1.23.*
 pandas>=1.5.*
+python-dateutil>=2.8.*
 scikit-learn>=1.2.*
 sshtunnel==0.4.0
 twine>=4.0.*
