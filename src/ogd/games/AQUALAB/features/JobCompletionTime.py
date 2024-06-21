@@ -47,7 +47,7 @@ class JobCompletionTime(PerJobFeature):
                 self._time += (event.timestamp - self._job_start_time).total_seconds()
                 self._job_start_time = None
             else:
-                _completed_job = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+                _completed_job = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))['string_value']
                 callstack = [f"{_getFilename(inspect.stack()[i].filename)}.{inspect.stack()[i].function}" for i in range(min(11, len(inspect.stack())))]
                 Logger.Log(f"In {callstack}:\n  {event.user_id} ({event.session_id}) completed job {_completed_job} with no active start time!", logging.DEBUG)
 

@@ -73,6 +73,7 @@ class DataInterface(Interface):
 
         _curr_sess : str      = ""
         _evt_sess_index : int = 1
+        print("HERE!")
         if self.IsOpen():
             Logger.Log(f"Retrieving rows from IDs with {id_mode.name} ID mode.", logging.DEBUG, depth=3)
             _rows   = self._rowsFromIDs(id_list=id_list, id_mode=id_mode, versions=versions, exclude_rows=exclude_rows)

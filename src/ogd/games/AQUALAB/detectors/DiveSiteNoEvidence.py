@@ -52,7 +52,7 @@ class DiveSiteNoEvidence(Detector):
 
         if self._in_dive and self._last_evidence_time is not None and not self._has_triggered:
             self._time_since_evidence = (event.Timestamp - self._last_evidence_time).total_seconds()
-        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name'))
+        self._current_job = event.GameState.get('job_name', event.EventData.get('job_name'))['string_value']
         return
     
     def _trigger_condition(self) -> bool:

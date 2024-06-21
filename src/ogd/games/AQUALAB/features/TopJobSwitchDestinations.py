@@ -30,7 +30,7 @@ class TopJobSwitchDestinations(Feature):
         return []
 
     def _updateFromEvent(self, event:Event) -> None:
-        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', None))
+        _job_name = event.GameState.get('job_name', event.EventData.get('job_name', None))['string_value']
         if _job_name is None:
             raise KeyError("Could not find key 'job_name' in GameState or EventData!")
         if self._validate_job(_job_name):

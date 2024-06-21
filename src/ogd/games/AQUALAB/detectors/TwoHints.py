@@ -70,7 +70,7 @@ class TwoHints(Detector):
             self._time_spent = self._time_spent / timedelta(seconds=1)
             self._sess_id = event.SessionID
 
-            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))['string_value']
             self._this_hint = event.EventData.get("node_id")
             self._detector_event_data = {
                 "time": self._time_spent,

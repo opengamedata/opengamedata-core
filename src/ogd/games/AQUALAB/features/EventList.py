@@ -76,7 +76,7 @@ class EventList(Feature):
                 "user_id": event.UserID,
                 "session_id": event.SessionID,
                 "timestamp": event.Timestamp.isoformat(),
-                "job_name": event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED")),
+                "job_name": event.GameState.get('job_name', event.EventData.get('job_name', "UNDEFINED"))['string_value'],
                 "index": event.EventSequenceIndex,
                 "event_primary_detail": None
             }

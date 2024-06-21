@@ -14,6 +14,7 @@ __all__ = [
     "JobGuideCount",
     "JobHelpCount",
     "JobLocationChanges",
+    "JobLocationChangesNoKelp",
     "JobModeling",
     "JobPlayTime",
     "JobPriorAttempt",
@@ -49,6 +50,7 @@ __all__ = [
     "TotalExperimentationTime",
     "TotalGuideCount",
     "TotalHelpCount",
+    "TimeInJournal",
     "TotalKelpTime",
     "TotalModelingTime",
     "TotalPlayTime",
@@ -73,6 +75,7 @@ from . import JobExperimentation
 from . import JobGuideCount
 from . import JobHelpCount
 from . import JobLocationChanges
+from . import TimeInJournal
 from . import JobModeling
 from . import JobPlayTime
 from . import JobPriorAttempt

@@ -65,7 +65,7 @@ class Idle(Detector):
             self._idle_time = self._idle_time / timedelta(seconds=1)
             self._idle_level = self._idle_threads / timedelta(seconds=1)
             self._sess_id = event.SessionID
-            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))['string_value']
         return
 
     def _trigger_condition(self) -> bool:

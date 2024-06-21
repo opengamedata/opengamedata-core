@@ -73,7 +73,7 @@ class SceneChangeFrequently(Detector):
             self._found = True
             self._time_spent = self._time_spent / timedelta(seconds=1)
             self._sess_id = event.SessionID
-            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))
+            self._job_name = event.GameState.get('job_name', event.EventData.get('job_name', "JOB NAME NOT FOUND"))['string_value']
         return
 
     def _trigger_condition(self) -> bool:
