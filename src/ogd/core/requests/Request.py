@@ -3,8 +3,8 @@ import abc
 from datetime import datetime
 from typing import Dict, List, Optional, Set
 # import local files
-from ogd.core.interfaces.EventInterface import EventInterface
-from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
+from ogd.core.connectors.interfaces.EventInterface import EventInterface
+from ogd.core.connectors.outerfaces.Outerface import Outerface
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.utils.Logger import Logger
@@ -55,14 +55,14 @@ class Request(abc.ABC):
     #  @param start_date   The starting date for our range of data to process.
     #  @param end_date     The ending date for our range of data to process.
     def __init__(self, range:ExporterRange, exporter_modes:Set[ExportMode],
-                interface:EventInterface,    outerfaces:Set[DataOuterface],
+                interface:EventInterface,    outerfaces:Set[Outerface],
                 feature_overrides:Optional[List[str]]=None):
         # TODO: kind of a hack to just get id from interface, figure out later how this should be handled.
         self._game_id        : str                    = str(interface._game_id)
         self._interface      : EventInterface          = interface
         self._range          : ExporterRange          = range
         self._exports        : Set[ExportMode]        = exporter_modes
-        self._outerfaces     : Set[DataOuterface]     = outerfaces
+        self._outerfaces     : Set[Outerface]     = outerfaces
         self._feat_overrides : Optional[List[str]]    = feature_overrides
 
     ## String representation of a request. Just gives game id, and date range.
@@ -108,7 +108,7 @@ class Request(abc.ABC):
         return ExportMode.POPULATION in self._exports
 
     @property
-    def Outerfaces(self) -> Set[DataOuterface]:
+    def Outerfaces(self) -> Set[Outerface]:
         return self._outerfaces
 
     def RemoveExportMode(self, mode:ExportMode):

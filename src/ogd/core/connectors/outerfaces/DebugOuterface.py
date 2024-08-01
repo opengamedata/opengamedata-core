@@ -5,13 +5,13 @@ import logging
 from typing import List, Set
 
 # import OGD files
-from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
+from ogd.core.connectors.outerfaces.Outerface import Outerface
 from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.utils import ExportRow
 
-class DebugOuterface(DataOuterface):
+class DebugOuterface(Outerface):
     """Outerface used for debugging purposes.
 
     Its destination is standard output; all values are output via print statements.

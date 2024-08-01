@@ -5,7 +5,7 @@ from pandas.io.parsers import TextFileReader
 from pathlib import Path
 from typing import Any, Dict, IO, List, Tuple, Optional
 ## import local files
-from ogd.core.interfaces.EventInterface import EventInterface
+from ogd.core.connectors.interfaces.EventInterface import EventInterface
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.tables.TableSchema import TableSchema
@@ -56,7 +56,7 @@ class CSVInterface(EventInterface):
 
     def _rowsFromIDs(self, id_list: List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None, exclude_rows:Optional[List[str]]=None) -> List[Tuple]:
         ret_val : List[Tuple] = []
-        if self.IsOpen() and not self._data.empty:
+        if self.IsOpen and not self._data.empty:
             _data : pd.DataFrame
             if id_mode == IDMode.SESSION:
                 _data = self._data.loc[self._data['session_id'].isin(id_list)]
@@ -70,18 +70,16 @@ class CSVInterface(EventInterface):
             ret_val = list(_data.itertuples(index=False, name=None))
         return ret_val
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime) -> List[str]:
         if not self._data.empty:
             server_times = pd.to_datetime(self._data['server_time'])
             mask = (server_times >= pd.to_datetime(min)) & (server_times <= pd.to_datetime(max))
-            if versions is not None and versions is not []:
-                mask = mask & (self._data['app_version'].isin(versions))
             data_masked = self._data.loc[mask]
             return data_masked['session_id'].unique().tolist()
         else:
             return []
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION) -> Dict[str, datetime]:
         if id_mode == IDMode.SESSION:
             min_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].min()
             max_date = self._data[self._data['session_id'].isin(id_list)]['timestamp'].max()

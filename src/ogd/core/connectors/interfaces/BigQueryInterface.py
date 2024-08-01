@@ -6,7 +6,7 @@ from google.cloud import bigquery
 from google.api_core.exceptions import BadRequest
 from typing import Dict, Final, List, Tuple, Optional
 # import locals
-from ogd.core.interfaces.EventInterface import EventInterface
+from ogd.core.connectors.interfaces.EventInterface import EventInterface
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.configs.data_sources.BigQuerySourceSchema import BigQuerySchema
@@ -113,7 +113,7 @@ class BigQueryInterface(EventInterface):
                     ret_val.append(tuple(event))
         return ret_val
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         query = f"""
@@ -132,7 +132,7 @@ class BigQueryInterface(EventInterface):
             Logger.Log(f"Found {len(ret_val)} ids. {ret_val if len(ret_val) <= 5 else ''}", logging.DEBUG, depth=3)
         return ret_val
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION) -> Dict[str, datetime]:
         ret_val : Dict[str, datetime] = {}
 
         match id_mode:
@@ -182,7 +182,7 @@ class BigQueryInterface(EventInterface):
         :return: True if the interface is open, else False
         :rtype: bool
         """
-        return True if (super().IsOpen() and self._client is not None) else False
+        return True if (super().IsOpen and self._client is not None) else False
 
     def DBPath(self, min_date:Optional[date]=None, max_date:Optional[date]=None) -> str:
         """The path of form "[projectID].[datasetID].[tableName]" used to make queries

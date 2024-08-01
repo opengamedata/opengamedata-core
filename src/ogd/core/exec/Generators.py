@@ -8,10 +8,10 @@ from typing import Optional, Set
 # import 3rd-party libraries
 
 # import local files
-from ogd.core.interfaces.EventInterface import EventInterface
-from ogd.core.interfaces.MySQLInterface import MySQLInterface
-from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
-from ogd.core.interfaces.BQFirebaseInterface import BQFirebaseInterface
+from ogd.core.connectors.interfaces.EventInterface import EventInterface
+from ogd.core.connectors.interfaces.MySQLInterface import MySQLInterface
+from ogd.core.connectors.interfaces.BigQueryInterface import BigQueryInterface
+from ogd.core.connectors.interfaces.BQFirebaseInterface import BQFirebaseInterface
 from ogd.core.requests.Request import ExporterRange
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.models.enums.ExportMode import ExportMode

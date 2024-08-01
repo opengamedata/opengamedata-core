@@ -12,11 +12,11 @@ from typing import Any, List, Optional, Set, Tuple
 
 # import OGD files
 # from ogd.core.exec.Generators import OGDGenerators
-from ogd.core.interfaces.CSVInterface import CSVInterface
-from ogd.core.interfaces.EventInterface import EventInterface
-from ogd.core.interfaces.outerfaces.DataOuterface import DataOuterface
-from ogd.core.interfaces.outerfaces.DebugOuterface import DebugOuterface
-from ogd.core.interfaces.outerfaces.TSVOuterface import TSVOuterface
+from ogd.core.connectors.interfaces.CSVInterface import CSVInterface
+from ogd.core.connectors.interfaces.EventInterface import EventInterface
+from ogd.core.connectors.outerfaces.Outerface import Outerface
+from ogd.core.connectors.outerfaces.DebugOuterface import DebugOuterface
+from ogd.core.connectors.outerfaces.TSVOuterface import TSVOuterface
 from ogd.core.managers.ExportManager import ExportManager
 from ogd.core.models.enums.ExportMode import ExportMode
 from ogd.core.models.enums.IDMode import IDMode
@@ -25,7 +25,7 @@ from ogd.core.requests.RequestResult import RequestResult, ResultStatus
 from ogd.core.schemas.configs.ConfigSchema import ConfigSchema
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.games.GameSchema import GameSchema
-from ogd.core.schemas.tables.TableSchema import TableSchema
+from ogd.core.schemas.tables.EventTableSchema import EventTableSchema
 from ogd.core.utils.Logger import Logger
 from ogd.core.utils.Readme import Readme
 from .Generators import OGDGenerators
@@ -62,7 +62,7 @@ class OGDCommands:
         """
         try:
             game_schema = GameSchema.FromFile(game_id=game)
-            table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
+            table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             print(readme.CustomReadmeSource)
         except Exception as err:
@@ -86,7 +86,7 @@ class OGDCommands:
         path = destination / game
         try:
             game_schema = GameSchema.FromFile(game_id=game, schema_path=Path("src") / "ogd" / "games" / game / "schemas")
-            table_schema = TableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
+            table_schema = EventTableSchema(schema_name=f"{config.GameSourceMap[game].TableSchema}.json")
             readme = Readme(game_schema=game_schema, table_schema=table_schema)
             readme.GenerateReadme(path=path)
         except Exception as err:
@@ -118,7 +118,7 @@ class OGDCommands:
         export_modes   : Set[ExportMode]
         interface      : EventInterface
         export_range   : ExporterRange
-        file_outerface : DataOuterface
+        file_outerface : Outerface
         dataset_id     : Optional[str] = None
 
     # 1. get exporter modes to run
@@ -130,7 +130,7 @@ class OGDCommands:
             _ext = str(args.file).rsplit('.', maxsplit=1)[-1]
             _cfg = GameSourceSchema(name="FILE SOURCE", all_elements={"schema":"OGD_EVENT_FILE"}, data_sources={})
             interface = CSVInterface(game_id=args.game, config=_cfg, fail_fast=config.FailFast, filepath=Path(args.file), delim="\t" if _ext == 'tsv' else ',')
-            export_range = ExporterRange.FromIDs(source=interface, ids=interface.AllIDs() or [])
+            export_range = ExporterRange.FromIDs(source=interface, ids=interface.AvailableIDs() or [])
         else:
             interface = OGDGenerators.GenDBInterface(config=config, game=args.game)
         # a. Case where specific player ID was given
@@ -168,7 +168,7 @@ class OGDCommands:
         _cfg = GameSourceSchema(name="FILE DEST", all_elements={"database":"FILE", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
         file_outerface = TSVOuterface(game_id=args.game, config=_cfg, export_modes=export_modes, date_range=export_range.DateRange,
                                     file_indexing=config.FileIndexConfig, dataset_id=dataset_id)
-        outerfaces : Set[DataOuterface] = {file_outerface}
+        outerfaces : Set[Outerface] = {file_outerface}
         # If we're in debug level of output, include a debug outerface, so we know what is *supposed* to go through the outerfaces.
         if config.DebugLevel == "DEBUG":
             _cfg = GameSourceSchema(name="DEBUG", all_elements={"database":"DEBUG", "table":"DEBUG", "schema":"OGD_EVENT_FILE"}, data_sources={})
@@ -176,7 +176,7 @@ class OGDCommands:
 
     # 4. Once we have the parameters parsed out, construct the request.
         req = Request(range=export_range, exporter_modes=export_modes, interface=interface, outerfaces=outerfaces)
-        if req.Interface.IsOpen():
+        if req.Interface.IsOpen:
             export_manager : ExportManager = ExportManager(config=config)
             result         : RequestResult = export_manager.ExecuteRequest(request=req)
             success = result.Status == ResultStatus.SUCCESS

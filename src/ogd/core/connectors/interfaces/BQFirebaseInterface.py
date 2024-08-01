@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 from typing import Dict, Final, List, Tuple, Optional
 # import locals
-from ogd.core.interfaces.BigQueryInterface import BigQueryInterface
+from ogd.core.connectors.interfaces.BigQueryInterface import BigQueryInterface
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.utils.Logger import Logger
@@ -23,7 +23,7 @@ class BQFirebaseInterface(BigQueryInterface):
 
     # *** RE-IMPLEMENT ABSTRACT FUNCTIONS ***
 
-    def _allIDs(self) -> List[str]:
+    def _availableIDs(self) -> List[str]:
         query = f"""
             SELECT DISTINCT param.value.int_value AS session_id
             FROM `{self.DBPath()}`,
@@ -35,7 +35,7 @@ class BQFirebaseInterface(BigQueryInterface):
         ids = [str(row['session_id']) for row in data]
         return ids if ids != None else []
 
-    def _fullDateRange(self) -> Dict[str, datetime]:
+    def _availableDates(self) -> Dict[str, datetime]:
         query = f"""
             WITH datetable AS
             (
@@ -73,7 +73,7 @@ class BQFirebaseInterface(BigQueryInterface):
                 events.append(tuple(event))
         return events if events != None else []
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]] = None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime) -> List[str]:
         ret_val = []
         str_min, str_max = min.strftime("%Y%m%d"), max.strftime("%Y%m%d")
         query = f"""
@@ -90,7 +90,7 @@ class BQFirebaseInterface(BigQueryInterface):
             ret_val = ids
         return ret_val
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]] = None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION) -> Dict[str, datetime]:
         match id_mode:
             case IDMode.SESSION:
                 id_string = ','.join([f"{x}" for x in id_list])

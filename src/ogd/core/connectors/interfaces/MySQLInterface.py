@@ -6,7 +6,7 @@ import traceback
 from datetime import datetime
 from typing import Dict, Final, List, Tuple, Optional
 # import locals
-from ogd.core.interfaces.EventInterface import EventInterface
+from ogd.core.connectors.interfaces.EventInterface import EventInterface
 from ogd.core.models.enums.IDMode import IDMode
 from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
 from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
@@ -262,7 +262,7 @@ class MySQLInterface(EventInterface):
         self._is_open = False
         return True
 
-    def _allIDs(self) -> List[str]:
+    def _availableIDs(self) -> List[str]:
         if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             _db_name     : str = self._config.DatabaseName
             _table_name  : str = self._config.TableName
@@ -284,7 +284,7 @@ class MySQLInterface(EventInterface):
             Logger.Log(f"Could not get list of all session ids, MySQL connection is not open.", logging.WARN)
             return []
 
-    def _fullDateRange(self) -> Dict[str,datetime]:
+    def _availableDates(self) -> Dict[str,datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             _db_name     : str = self._config.DatabaseName
@@ -353,7 +353,7 @@ class MySQLInterface(EventInterface):
             Logger.Log(f"Could not get data for {len(id_list)} sessions, MySQL connection is not open or config was not for MySQL.", logging.WARN)
         return ret_val
 
-    def _IDsFromDates(self, min:datetime, max:datetime, versions:Optional[List[int]]=None) -> List[str]:
+    def _IDsFromDates(self, min:datetime, max:datetime) -> List[str]:
         ret_val = []
         if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             # alias long setting names.
@@ -366,8 +366,6 @@ class MySQLInterface(EventInterface):
             if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params.append(self._game_id)
-            # if versions is not None and versions is not []:
-            #     filters.append(f"app_version in ({','.join([str(version) for version in versions])})")
             filters.append(f"`{self._TableSchema.EventSequenceIndexColumn}`='0'")
             filters.append(f"(`server_time` BETWEEN '{min.isoformat()}' AND '{max.isoformat()}')")
             filter_clause = " AND ".join(filters)
@@ -385,7 +383,7 @@ class MySQLInterface(EventInterface):
             Logger.Log(f"Could not get session list for {min.isoformat()}-{max.isoformat()} range, MySQL connection is not open or config was not for MySQL.", logging.WARN)
         return ret_val
 
-    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION, versions:Optional[List[int]]=None) -> Dict[str, datetime]:
+    def _datesFromIDs(self, id_list:List[str], id_mode:IDMode=IDMode.SESSION) -> Dict[str, datetime]:
         ret_val = {'min':datetime.now(), 'max':datetime.now()}
         if self._db_cursor is not None and isinstance(self._config.Source, MySQLSchema):
             # alias long setting names.
@@ -398,8 +396,6 @@ class MySQLInterface(EventInterface):
             if _table_name != self._game_id:
                 filters.append(f"`app_id`=%s")
                 params = tuple(self._game_id)
-            # if versions is not None and versions is not []:
-            #     filters.append(f"app_version in ({','.join([str(version) for version in versions])})")
             ids_string = ','.join([f"'{x}'" for x in id_list])
             if id_mode == IDMode.SESSION:
                 sess_id_col = self._TableSchema.SessionIDColumn or "session_id"
