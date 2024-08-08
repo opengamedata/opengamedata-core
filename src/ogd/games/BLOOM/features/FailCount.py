@@ -9,7 +9,7 @@ from ogd.core.models.FeatureData import FeatureData
 class FailCount(Feature):
     def __init__(self, params: GeneratorParameters):
         super().__init__(params=params)
-        self.fail_counts: Dict[str, int] = {
+        self.fail_type_counts: Dict[str, int] = {
             "CityFailed": 0,
             "TooManyBlooms": 0,
             "OutOfMoney": 0
@@ -25,20 +25,23 @@ class FailCount(Feature):
         return []
 
     def _updateFromEvent(self, event: Event) -> None:
-        lose_condition = event.EventData.get("lose_condition", "")
-        if lose_condition:
-            if lose_condition in self.fail_counts:
-                self.fail_counts[lose_condition] += 1
+        fail_type = event.EventData.get("lose_condition", "")
+        if fail_type in self.fail_type_counts:
+            self.fail_type_counts[fail_type] += 1
 
     def _updateFromFeatureData(self, feature: FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        _total = sum([val for val in self.fail_counts.values()])
-        return [_total, self.fail_counts]
+        return [
+            sum(self.fail_type_counts.values()),
+            self.fail_type_counts['CityFailed'],
+            self.fail_type_counts['TooManyBlooms'],
+            self.fail_type_counts['OutOfMoney']
+        ]
 
     def Subfeatures(self) -> List[str]:
-        return ["Breakdown"]
+        return ["CityFailed", "TooManyBlooms", "OutOfMoney"]
 
     # *** Optionally override public functions. ***
     @staticmethod
