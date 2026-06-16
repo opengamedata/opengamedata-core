@@ -1582,6 +1582,18 @@
             "type": "GoodPolicyCount",
             "description": "Count of good policies",
             "return_type": "int"
+         },
+         "PlayerProgression": {
+            "enabled": true,
+            "type": "PlayerProgression",
+            "description": "Player progression scanned at the player level to be used by second-order feature PopulationProgression for the player progression graph",
+            "return_type": "dict"
+         },
+         "PopulationProgression": {
+            "enabled": true,
+            "type": "PopulationProgression",
+            "description": "Population progression scanned at the population level to be used by second-order feature PlayerProgression for the population progression graph",
+            "return_type": "dict"
          }
       }
    },
