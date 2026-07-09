@@ -1601,6 +1601,18 @@
                 "type": "UserTotalSessionDuration",
                 "description": "Total duration of all sessions for a user.",
                 "return_type": "timedelta"
+            },
+            "LanguageSelected": {
+                "enabled": true,
+                "type": "LanguageSelected",
+                "description": "Language selected by the player at the population level.",
+                "return_type": "str"
+            },
+            "PlayerLanguageSelected": {
+                "enabled": true,
+                "type": "PlayerLanguageSelected",
+                "description": "Language selected by the player at the player level.",
+                "return_type": "str"
             }
         }
     },

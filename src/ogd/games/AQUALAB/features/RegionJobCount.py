@@ -16,37 +16,38 @@ class RegionJobCount(PerCountFeature):
     def __init__(self, params:GeneratorParameters):
         super().__init__(params=params)
         regions = ['arctic', 'coral', 'bayou', 'kelp', 'other']
-        self.count = 0
+        self.attemptedCount = 0
+        self.completeCount = 0
         self.region = regions[self.CountIndex]
     # *** IMPLEMENT ABSTRACT FUNCTIONS ***
     @classmethod
     def _eventFilter(cls, mode:ExtractionMode) -> List[str]:
-        return ["complete_job"]
+        return ["complete_job", "switch_job"]
 
     @classmethod
     def _featureFilter(cls, mode:ExtractionMode) -> List[str]:
         return []
 
-    def _validateEventCountIndex(self, event:Event):
-        if event.app_version == 'Aqualab' or event.app_version == 'None':
-            if event.EventData.get('job_name', {}).get('string_value').startswith(self.region):
-                return True
-            else:
-                return False
-        else:
-            if event.EventData.get('job_name', {}).startswith(self.region):
-                return True
-            else:
-                return False
+    def _validateEventCountIndex(self, event:Event) -> bool:
+        job_name = event.GameState.get('job_name')
+        return isinstance(job_name, str) and job_name.startswith(self.region)
+
 # 'aqualab' and 'GameState"
     def _updateFromEvent(self, event:Event) -> None:
-        self.count += 1
+        if event.EventName == "switch_job":
+            self.attemptedCount += 1
+
+        if event.EventName == "complete_job":
+            self.completeCount += 1
 
     def _updateFromFeatureData(self, feature:FeatureData):
         return
 
     def _getFeatureValues(self) -> List[Any]:
-        return [self.count]
+        return [self.attemptedCount, self.completeCount]
+
+    def Subfeatures(self) -> List[str]:
+        return ["Complete"]
 
     # *** Optionally override public functions. ***
     @staticmethod

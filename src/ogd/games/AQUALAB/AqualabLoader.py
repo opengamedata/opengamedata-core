@@ -189,6 +189,10 @@ class AqualabLoader(GeneratorLoader):
                     ret_val = PopulationJobCompletionProgression.PopulationJobCompletionProgression(params=extractor_params)
                 case "PopulationJobSwitchProgression":
                     ret_val = PopulationJobSwitchProgression.PopulationJobSwitchProgression(params=extractor_params)
+                case "LanguageSelected":    
+                    ret_val = LanguageSelected.LanguageSelected(params=extractor_params)
+                case "PlayerLanguageSelected":
+                    ret_val = PlayerLanguageSelected.PlayerLanguageSelected(params=extractor_params)
                 case _:
                     Logger.Log(f"'{feature_type}' is not a valid aggregate feature type for Aqualab.")
         # then run through per-count features.

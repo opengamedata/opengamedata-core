@@ -45,9 +45,9 @@ class PopulationJobSwitchProgression(Feature):
                         }
                     self.nodes[key]["node_count"] += node["node_count"]
                     self.nodes[key]["percentage_completed"] += node["percentage_completed"]
-                    # Normalize time_spent to timedelta if it's an int
+                    # Normalize time_spent to timedelta if it's int or float (seconds)
                     time_spent = node["time_spent"]
-                    if isinstance(time_spent, int):
+                    if isinstance(time_spent, (int, float)):
                         time_spent = timedelta(seconds=time_spent)
                     self.nodes[key]["time_spent"] += time_spent
         elif feature.FeatureType == "PlayerProgressionLinks":
